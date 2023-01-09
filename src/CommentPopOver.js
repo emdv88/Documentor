@@ -20,7 +20,7 @@ export function CommentPopOver({x, y, open, handleSave, handleCancel}) {
                 <Typography>
                     Add a Comment
                 </Typography>
-                <TextField id="comment-input" label="comment" variant="outlined" onChange={(e) => {console.log("onchange"); setComment(e.target.value)}}/>
+                <TextField id="comment-input" label="comment" variant="outlined" onChange={(e) => setComment(e.target.value)}/>
                 <Button onClick={() => handleSave(comment)} variant={"contained"}>
                     Save
                 </Button>
