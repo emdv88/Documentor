@@ -8,6 +8,7 @@ export function Report() {
     const [popoverX, setPopoverX] = useState(0)
     const [popoverY, setPopoverY] = useState(0)
     const [showPopover, setShowPopover] = useState(false)
+    const [comments, setComments] = useState([])
 
     function getSelectionText(e) {
         let text = "";
@@ -38,17 +39,18 @@ export function Report() {
     }
 
     function handleSave(comment) {
-
-        let commentNode = document.createElement("p")
-        let textNode = document.createElement("i")
-        textNode.appendChild(document.createTextNode(`${selectedText}: `))
-        commentNode.appendChild(textNode)
-        commentNode.appendChild(document.createTextNode(comment))
-        document.getElementById("comments").appendChild(commentNode)
-
+        const newComment = (
+            <Typography>
+                <Typography variant="body2" sx={{fontStyle: 'italic', display: "inline"}}>
+                    {`${selectedText}: `}
+                </Typography>
+                <Typography variant="body2" sx={{display: "inline"}}>
+                    {comment}
+                </Typography>
+            </Typography>
+        )
+        setComments([...comments, newComment])
         setShowPopover(false)
-        setSelectionCounter(selectionCounter + 1)
-        setSelectedText("")
     }
 
     function handleCancel() {
@@ -87,6 +89,7 @@ export function Report() {
                         <Typography variant="h5">
                             Comments
                         </Typography>
+                        {comments}
                     </Grid>
                 </Grid>
             </CardContent>
