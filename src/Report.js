@@ -137,13 +137,13 @@ export function Report() {
                         </Typography>
                     </Grid>
                 </Grid>
-                <CommentPopOver 
-                    open={showPopover} 
-                    x={popoverX} 
-                    y={popoverY} 
-                    handleSave={handleSave} 
-                    handleCancel={handleCancel}/>
             </CardContent>
+            <CommentPopOver 
+                open={showPopover} 
+                x={popoverX} 
+                y={popoverY} 
+                handleSave={handleSave} 
+                handleCancel={handleCancel}/>
         </Card>
     );
 }
