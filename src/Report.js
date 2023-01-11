@@ -51,6 +51,7 @@ export function Report() {
         )
         setComments([...comments, newComment])
         setShowPopover(false)
+        setSelectionCounter(selectionCounter + 1)
     }
 
     function handleCancel() {

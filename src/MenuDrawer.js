@@ -5,8 +5,8 @@ import { useState } from "react";
 export function MenuDrawer() {
     const [open, setOpen] = useState(false)
 
-    async function saveToFile() {
-        var pageSource = document.body.parentNode.innerHTML;
+    function saveToFile() {
+        var pageSource = document.documentElement.outerHTML;
         var downloadLink = document.createElement('a');
         downloadLink.href = "data:text/html," + unescape(encodeURI( escape(pageSource) ));
         downloadLink.target = '_blank';
