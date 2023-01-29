@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, Typography, Grid } from "@mui/material"
 import { CommentPopOver } from "./CommentPopOver";
 
-export function Report() {
+export function Report({ documentContent }) {
     const [selectionCounter, setSelectionCounter] = useState(0)
     const [selectedText, setSelectedText] = useState("")
     const [popoverX, setPopoverX] = useState(0)
@@ -66,25 +66,7 @@ export function Report() {
             <CardContent onTouchEnd={getSelectionText} onMouseUp={getSelectionText}>
                 <Grid container spacing={2}>
                     <Grid item xs={8}>
-                        <Typography variant="h4">
-                            This is a text highlighter demo
-                        </Typography>
-                        <Typography variant="body2">
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
-                            galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, 
-                            but also the leap into electronic typesetting, remaining essentially unchanged. 
-                            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, 
-                            and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                        </Typography>
-                        <Typography variant="body2">
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
-                            galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, 
-                            but also the leap into electronic typesetting, remaining essentially unchanged. 
-                            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, 
-                            and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                        </Typography>
+                        {<div dangerouslySetInnerHTML={{ __html: documentContent }} />}
                     </Grid>
                     <Grid item xs={4} id="comments">
                         <Typography variant="h5">
