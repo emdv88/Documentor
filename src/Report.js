@@ -76,12 +76,13 @@ export function Report({ documentContent }) {
                     </Grid>
                 </Grid>
             </CardContent>
+{/*             
             <CommentPopOver 
                 open={showPopover} 
                 x={popoverX} 
                 y={popoverY} 
                 handleSave={handleSave} 
-                handleCancel={handleCancel}/>
+                handleCancel={handleCancel}/> */}
         </Card>
     );
 }
