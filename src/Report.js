@@ -45,10 +45,22 @@ export function Report({ documentContent }) {
                 highlightedNode.setAttribute('id', selectionCounter.toString())
                 highlightedNode.appendChild(document.createTextNode(text))
                 range.insertNode(highlightedNode);
+                
+                var saveNode = range.startContainer;
 
-                saveComment(text);
+                var startOffset = range.startOffset;  // where the range starts
+                var endOffset = range.endOffset;      // where the range ends
+
+                var nodeData = saveNode.data;                       // the actual selected text
+                var nodeHTML = saveNode.parentElement.innerHTML;    // parent element innerHTML
+                var nodeTagName = saveNode.parentElement.tagName;   // parent element tag name
+                let dat;
+                dat = [startOffset, endOffset, nodeData, nodeHTML, nodeTagName ];
+                saveComment(dat);
                 console.log(getComments());
+
             }
+
         } else if (document.selection && document.selection.type !== "Control") {
             // not tested yet
             // let range = document.selection.createRange();
