@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Card, CardContent, Typography, Grid } from "@mui/material"
 import { CommentPopOver } from "./CommentPopOver";
 
+// https://stackoverflow.com/questions/23479533/how-can-i-save-a-range-object-from-getselection-so-that-i-can-reproduce-it-on
+
+
 export function Report({ documentContent }) {
     const [selectionCounter, setSelectionCounter] = useState(0)
     const [selectedText, setSelectedText] = useState("")
@@ -10,11 +13,31 @@ export function Report({ documentContent }) {
     const [showPopover, setShowPopover] = useState(false)
     const [comments, setComments] = useState([])
 
+    const getComments = () => {
+        // https://dev.to/stevealila/3-typical-ways-to-store-data-using-javascript-1m1f
+        let comment_storage;
+        if(localStorage.getItem('comment_storage') === null){
+            comment_storage = [];
+        }else {
+            comment_storage = JSON.parse(localStorage.getItem('comment_storage'));
+        }
+        return comment_storage;
+    }
+
+    const saveComment = inputData => {
+        const comment_storage = getComments();
+        comment_storage.push(inputData);
+        localStorage.setItem('comment_storage', JSON.stringify(comment_storage));
+    }
+
+    
+
     function getSelectionText(e) {
         let text = "";
         if (window.getSelection) {
             let selection = window.getSelection();
             text = selection.toString()
+            
             if (selection.rangeCount) {
                 let range = selection.getRangeAt(0);
                 range.deleteContents();
@@ -22,6 +45,9 @@ export function Report({ documentContent }) {
                 highlightedNode.setAttribute('id', selectionCounter.toString())
                 highlightedNode.appendChild(document.createTextNode(text))
                 range.insertNode(highlightedNode);
+
+                saveComment(text);
+                console.log(getComments());
             }
         } else if (document.selection && document.selection.type !== "Control") {
             // not tested yet
@@ -31,6 +57,7 @@ export function Report({ documentContent }) {
         }
 
         if (text) {
+            
             setSelectedText(text)
             setShowPopover(true)
             setPopoverX(e.pageY)
@@ -49,6 +76,7 @@ export function Report({ documentContent }) {
                 </Typography>
             </Typography>
         )
+        
         setComments([...comments, newComment])
         setShowPopover(false)
         setSelectionCounter(selectionCounter + 1)
