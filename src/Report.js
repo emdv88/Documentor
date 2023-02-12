@@ -4,6 +4,44 @@ import { CommentPopOver } from "./CommentPopOver";
 
 // https://stackoverflow.com/questions/23479533/how-can-i-save-a-range-object-from-getselection-so-that-i-can-reproduce-it-on
 
+export const getComments = () => {
+    // https://dev.to/stevealila/3-typical-ways-to-store-data-using-javascript-1m1f
+    let comment_storage;
+    if(localStorage.getItem('comment_storage') === null){
+        comment_storage = [];
+    }else {
+        comment_storage = JSON.parse(localStorage.getItem('comment_storage'));
+    }
+    return comment_storage;
+}
+
+export function buildRange(startOffset, endOffset, nodeData, nodeHTML, nodeTagName){
+    var cDoc = document.getElementById('content-frame').contentDocument;
+    var tagList = cDoc.getElementsByTagName(nodeTagName);
+    
+    
+    const foundEle = tagList.find(x => x.innerHTML === nodeHTML);
+    var nodeList = foundEle.childNodes;
+    const foundNode = nodeList.find(x => x.data === nodeData);
+    
+    let startNode = foundNode
+    let endNode = foundNode
+    // create the range
+    var range = cDoc.createRange();
+
+    range.setStart(startNode, startOffset);
+    range.setEnd(endNode, endOffset);
+    return range;
+}
+
+export function highlightRange(range, text) {
+    // #TODO: test should not be an argument
+    range.deleteContents();
+    let highlightedNode = document.createElement('b')
+    // highlightedNode.setAttribute('id', selectionCounter.toString())
+    highlightedNode.appendChild(document.createTextNode(text))
+    range.insertNode(highlightedNode);
+}
 
 export function Report({ documentContent }) {
     const [selectionCounter, setSelectionCounter] = useState(0)
@@ -13,16 +51,7 @@ export function Report({ documentContent }) {
     const [showPopover, setShowPopover] = useState(false)
     const [comments, setComments] = useState([])
 
-    const getComments = () => {
-        // https://dev.to/stevealila/3-typical-ways-to-store-data-using-javascript-1m1f
-        let comment_storage;
-        if(localStorage.getItem('comment_storage') === null){
-            comment_storage = [];
-        }else {
-            comment_storage = JSON.parse(localStorage.getItem('comment_storage'));
-        }
-        return comment_storage;
-    }
+
 
     const saveComment = inputData => {
         const comment_storage = getComments();
@@ -30,34 +59,7 @@ export function Report({ documentContent }) {
         localStorage.setItem('comment_storage', JSON.stringify(comment_storage));
     }
 
-    function buildRange(startOffset, endOffset, nodeData, nodeHTML, nodeTagName){
-        var cDoc = document.getElementById('content-frame').contentDocument;
-        var tagList = cDoc.getElementsByTagName(nodeTagName);
-        
-        // find the parent element with the same innerHTML
-        for (var i = 0; i < tagList.length; i++) {
-            if (tagList[i].innerHTML == nodeHTML) {
-                var foundEle = tagList[i];
-            }
-        }
-    
-        // find the node within the element by comparing node data
-        var nodeList = foundEle.childNodes;
-        for (var i = 0; i < nodeList.length; i++) {
-            if (nodeList[i].data === nodeData) {
-                var foundNode = nodeList[i];
-            }
-        }
-    
-        // create the range
-        var range = cDoc.createRange();
-    
-        range.setStart(startNode, startOffset);
-        range.setEnd(endNode, endOffset);
-        return range;
-    }
 
-    
 
     function getSelectionText(e) {
         let text = "";
@@ -67,22 +69,20 @@ export function Report({ documentContent }) {
             
             if (selection.rangeCount) {
                 let range = selection.getRangeAt(0);
-                range.deleteContents();
-                let highlightedNode = document.createElement('b')
-                highlightedNode.setAttribute('id', selectionCounter.toString())
-                highlightedNode.appendChild(document.createTextNode(text))
-                range.insertNode(highlightedNode);
+                highlightRange(range, text)
                 
                 var saveNode = range.startContainer;
 
                 var startOffset = range.startOffset;  // where the range starts
                 var endOffset = range.endOffset;      // where the range ends
 
-                var nodeData = saveNode.data;                       // the actual selected text
+                var nodeData = saveNode.data;                       // the actual selected text 
+                // #FIXME: this appear not to be true, instead it's something like the leading text..
+                
                 var nodeHTML = saveNode.parentElement.innerHTML;    // parent element innerHTML
                 var nodeTagName = saveNode.parentElement.tagName;   // parent element tag name
                 let dat;
-                dat = [startOffset, endOffset, nodeData, nodeHTML, nodeTagName ];
+                dat = [startOffset, endOffset, nodeData, nodeHTML, nodeTagName];
                 saveComment(dat);
                 console.log(getComments());
 

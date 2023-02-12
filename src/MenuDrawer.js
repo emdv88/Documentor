@@ -3,6 +3,7 @@ import { Drawer, List, ListItem, ListItemButton, ListItemText, Fab } from "@mui/
 import { Save, Menu, ArrowBack, DriveFolderUpload } from '@mui/icons-material'
 import { Converter } from 'showdown'
 import { delay } from "./utils";
+import {getComments, buildRange, highlightRange} from "./Report"
 
 
 export function MenuDrawer({ setDocumentContent }) {
@@ -37,6 +38,20 @@ export function MenuDrawer({ setDocumentContent }) {
     const setDocumentTitle = (fileName) => {
         const stringParts = fileName.split(".").slice(0, -1)
         document.title = ''.concat(...stringParts)
+    }
+
+    function kut(dat) {
+        console.log(dat)
+        let range = buildRange(dat)
+        highlightRange(range)
+
+    }
+
+    const loadComments = () => {
+        let aaa = getComments()
+        console.log(aaa)
+        aaa.forEach(kut)
+        
     }
 
     const fabStyle = {
@@ -76,6 +91,12 @@ export function MenuDrawer({ setDocumentContent }) {
                         <ListItemButton onClick={saveToFile}>
                             <Save />
                             <ListItemText sx={{paddingLeft: '5px'}} primary="Save document" />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={2} disablePadding>
+                        <ListItemButton onClick={loadComments}>
+                            <Save />
+                            <ListItemText sx={{paddingLeft: '5px'}} primary="Load comments" />
                         </ListItemButton>
                     </ListItem>
                 </List>
